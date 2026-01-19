@@ -7,7 +7,7 @@ export default function StudyForm({ onSubmit, loading }) {
     const topic = form.topic.value.trim();
     const level = form.level.value;
 
-    // 🔒 Frontend validation
+    // 🔒 Frontend validation (unchanged)
     if (topic.length < 3) {
       alert("Please enter a valid topic (at least 3 characters).");
       return null;
@@ -26,7 +26,7 @@ export default function StudyForm({ onSubmit, loading }) {
     return {
       topic,
       level,
-      language: "Java"
+      language: "Java",
     };
   };
 
@@ -46,41 +46,74 @@ export default function StudyForm({ onSubmit, loading }) {
   };
 
   return (
-    <form onSubmit={handleGenerate} className="space-y-4">
-  <input
-    name="topic"
-    placeholder="Topic (e.g. HashMap)"
-    className="w-full border border-slate-300 p-2.5 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
-    required
-  />
+    <form onSubmit={handleGenerate} className="space-y-5">
+      {/* Topic input */}
+      <div className="space-y-1">
+        <label className="block text-xs font-medium text-slate-600 dark:text-slate-300">
+          Topic
+        </label>
+        <input
+          name="topic"
+          placeholder="e.g. HashMap, Binary Search, REST pagination"
+          className="
+            w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5
+            text-sm text-slate-900 placeholder:text-slate-400
+            focus:outline-none focus:ring-2 focus:ring-indigo-500
+            dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100
+            dark:placeholder:text-slate-500
+          "
+          required
+        />
+      </div>
 
-  <select
-    name="level"
-    className="w-full border border-slate-300 p-2.5 rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
-  >
-    <option>Junior</option>
-    <option>Mid</option>
-    <option>Senior</option>
-  </select>
+      {/* Level select */}
+      <div className="space-y-1">
+        <label className="block text-xs font-medium text-slate-600 dark:text-slate-300">
+          Level
+        </label>
+        <select
+          name="level"
+          className="
+            w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5
+            text-sm text-slate-900
+            focus:outline-none focus:ring-2 focus:ring-indigo-500
+            dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100
+          "
+        >
+          <option>Junior</option>
+          <option>Mid</option>
+          <option>Senior</option>
+        </select>
+      </div>
 
-  <div className="flex gap-3 pt-2">
-    <button
-      type="submit"
-      disabled={loading}
-      className="flex-1 border border-slate-300 py-2.5 rounded-md hover:bg-slate-50 disabled:opacity-50"
-    >
-      {loading ? "Generating..." : "Generate"}
-    </button>
+      {/* Actions */}
+      <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+        <button
+          type="submit"
+          disabled={loading}
+          className="
+            flex-1 rounded-lg border border-slate-300 px-4 py-2.5
+            text-sm font-medium text-slate-800
+            transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50
+            dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800
+          "
+        >
+          {loading ? "Generating…" : "Generate"}
+        </button>
 
-    <button
-      type="button"
-      onClick={handleStartInterview}
-      className="flex-1 bg-indigo-600 text-white py-2.5 rounded-md hover:bg-indigo-700"
-    >
-      Start Interview
-    </button>
-  </div>
-</form>
-
+        <button
+          type="button"
+          onClick={handleStartInterview}
+          className="
+            flex-1 rounded-lg bg-indigo-600 px-4 py-2.5
+            text-sm font-semibold text-white
+            transition hover:bg-indigo-700
+            focus:outline-none focus:ring-2 focus:ring-indigo-500
+          "
+        >
+          Start Interview
+        </button>
+      </div>
+    </form>
   );
 }
