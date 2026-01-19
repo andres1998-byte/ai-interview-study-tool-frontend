@@ -40,6 +40,8 @@ export default function InterviewPage() {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
+
 
   // 🚀 Start interview ONLY when entering THEORY phase
   useEffect(() => {
@@ -196,19 +198,31 @@ export default function InterviewPage() {
     };
 
     const handleSubmit = async () => {
-      setSubmitting(true);
+  const totalQuestions = interview.theoryQuestions.length;
+  const answeredCount = Object.keys(answers).length;
 
-      const payload = {
-        interviewId: interview.interviewId,
-        answers: answers,
-      };
+  if (answeredCount < totalQuestions) {
+    setSubmitError(
+      `Please answer all ${totalQuestions} questions before submitting the interview.`
+    );
+    return;
+  }
 
-      const res = await submitTheory(payload);
+  setSubmitError(null);
+  setSubmitting(true);
 
-      setResult(res);
-      setSubmitting(false);
-      setPhase(PHASES.REVIEW);
-    };
+  const payload = {
+    interviewId: interview.interviewId,
+    answers: answers,
+  };
+
+  const res = await submitTheory(payload);
+
+  setResult(res);
+  setSubmitting(false);
+  setPhase(PHASES.REVIEW);
+};
+
 
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-10">
@@ -256,13 +270,36 @@ export default function InterviewPage() {
             ))}
           </div>
 
-          <button
-            disabled={submitting}
-            onClick={handleSubmit}
-            className="mt-8 w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
-          >
-            {submitting ? "Submitting..." : "Submit Answers"}
-          </button>
+            {/* Submission section */}
+<div className="mt-12 rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
+  <div className="mb-4 flex items-center justify-between">
+    <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+      Ready to submit your interview?
+    </p>
+    <p className="text-xs text-slate-500 dark:text-slate-400">
+      {Object.keys(answers).length} / {interview.theoryQuestions.length} answered
+    </p>
+  </div>
+
+  {submitError && (
+    <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-800 dark:bg-rose-900/20 dark:text-rose-300">
+      {submitError}
+    </div>
+  )}
+
+  <button
+    disabled={submitting}
+    onClick={handleSubmit}
+    className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+  >
+    {submitting ? "Submitting..." : "Submit Answers"}
+  </button>
+
+  <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+    You must answer all questions before submitting.
+  </p>
+</div>
+
         </div>
       </div>
     );
@@ -373,98 +410,142 @@ export default function InterviewPage() {
      RESULT
      ========================= */
   if (phase === PHASES.RESULT) {
-    const total = result?.totalQuestions ?? 0;
-    const correct = result?.correctAnswers ?? 0;
-    const missed = total - correct;
-    const score = result?.scorePercentage ?? 0;
+  const total = result?.totalQuestions ?? 0;
+  const correct = result?.correctAnswers ?? 0;
+  const missed = total - correct;
+  const score = result?.scorePercentage ?? 0;
 
-    const missedQuestions =
-      result?.results?.filter((r) => r.correct === false) ?? [];
+  const missedQuestions =
+    result?.results?.filter((r) => r.correct === false) ?? [];
 
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-10">
-        <div className="mx-auto w-full max-w-3xl px-4">
-          <div className="mb-8 rounded-2xl border border-slate-200 bg-white/80 p-8 text-center shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
-            <h2 className="mb-3 text-2xl font-semibold">
-              Interview Complete
-            </h2>
+  const performanceLabel =
+    score >= 80 ? "Strong performance" : score >= 60 ? "Fair performance" : "Needs improvement";
 
-            <div className="mb-4 text-4xl font-bold text-indigo-600">
-              {score}%
-            </div>
+  const performanceColor =
+    score >= 80
+      ? "text-emerald-600 dark:text-emerald-400"
+      : score >= 60
+      ? "text-amber-600 dark:text-amber-400"
+      : "text-rose-600 dark:text-rose-400";
 
-            <div className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
-              <div>Total questions: {total}</div>
-              <div className="text-emerald-600 dark:text-emerald-400">
-                Correct answers: {correct}
-              </div>
-              <div className="text-rose-600 dark:text-rose-400">
-                Questions missed: {missed}
-              </div>
-            </div>
+  const feedbackText =
+    score >= 80
+      ? "Great job. You demonstrated strong understanding of the core concepts."
+      : score >= 60
+      ? "Good effort. Review the missed topics to improve your consistency."
+      : "You're close. Focus on the missed concepts and try again to strengthen your fundamentals.";
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-12">
+      <div className="mx-auto w-full max-w-3xl px-4">
+        {/* Summary card */}
+        <div className="mb-10 rounded-3xl border border-slate-200 bg-white/80 p-10 text-center shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
+          <p className="mb-2 text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            Interview complete
+          </p>
+
+          <div className="mb-3 text-5xl font-bold tracking-tight text-indigo-600">
+            {score}%
           </div>
 
-          {missedQuestions.length > 0 && (
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold">
-                Review missed questions
-              </h3>
+          <p className={`mb-2 text-sm font-semibold ${performanceColor}`}>
+            {performanceLabel}
+          </p>
 
-              {missedQuestions.map((q, index) => (
-                <div
-                  key={q.questionId ?? index}
-                  className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60"
-                >
-                  <p className="mb-3 text-sm font-medium">
-                    {q.questionText}
-                  </p>
+          <p className="mx-auto mb-6 max-w-md text-sm text-slate-600 dark:text-slate-300">
+            {feedbackText}
+          </p>
 
-                  <div className="space-y-1 text-sm">
-                    <div className="text-rose-600 dark:text-rose-400">
-                      <span className="font-medium">
-                        Your answer:
-                      </span>{" "}
-                      {q.userAnswer}
-                    </div>
-
-                    <div className="text-emerald-600 dark:text-emerald-400">
-                      <span className="font-medium">
-                        Correct answer:
-                      </span>{" "}
-                      {q.correctAnswer}
-                    </div>
-                  </div>
-                </div>
-              ))}
+          <div className="mx-auto grid max-w-sm grid-cols-3 gap-4 text-sm">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-800/40">
+              <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                Total
+              </p>
+              <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
+                {total}
+              </p>
             </div>
-          )}
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <button
-              onClick={() => navigate("/")}
-              className="flex-1 rounded-xl bg-slate-200 px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-            >
-              Back to Study
-            </button>
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 dark:border-emerald-800 dark:bg-emerald-900/20">
+              <p className="text-xs uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
+                Correct
+              </p>
+              <p className="mt-1 text-lg font-semibold text-emerald-700 dark:text-emerald-300">
+                {correct}
+              </p>
+            </div>
 
-            <button
-              onClick={() =>
-                navigate("/interview/code", {
-                  state: {
-                    interviewId: interview.interviewId,
-                    codingQuestion: interview.codingQuestion,
-                  },
-                })
-              }
-              className="flex-1 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-            >
-              Continue
-            </button>
+            <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 dark:border-rose-800 dark:bg-rose-900/20">
+              <p className="text-xs uppercase tracking-wide text-rose-600 dark:text-rose-400">
+                Missed
+              </p>
+              <p className="mt-1 text-lg font-semibold text-rose-700 dark:text-rose-300">
+                {missed}
+              </p>
+            </div>
           </div>
         </div>
+
+        {/* Missed questions */}
+        {missedQuestions.length > 0 && (
+          <div className="mb-10 space-y-6">
+            <h3 className="text-lg font-semibold tracking-tight">
+              Concepts to review
+            </h3>
+
+            {missedQuestions.map((q, index) => (
+              <div
+                key={q.questionId ?? index}
+                className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60"
+              >
+                <p className="mb-4 text-sm font-medium text-slate-900 dark:text-slate-100">
+                  {q.questionText}
+                </p>
+
+                <div className="space-y-2 text-sm">
+                  <div className="text-rose-600 dark:text-rose-400">
+                    <span className="font-medium">Your answer:</span>{" "}
+                    {q.userAnswer}
+                  </div>
+
+                  <div className="text-emerald-600 dark:text-emerald-400">
+                    <span className="font-medium">Correct answer:</span>{" "}
+                    {q.correctAnswer}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <button
+            onClick={() => navigate("/")}
+            className="flex-1 rounded-xl bg-slate-200 px-4 py-3 text-sm font-medium text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          >
+            Back to Study
+          </button>
+
+          <button
+            onClick={() =>
+              navigate("/interview/code", {
+                state: {
+                  interviewId: interview.interviewId,
+                  codingQuestion: interview.codingQuestion,
+                },
+              })
+            }
+            className="flex-1 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+          >
+            Continue to Coding Challenge
+          </button>
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   return null;
 }
