@@ -1,6 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
+
+const API_URL = "http://localhost:8080/api/interview/submit-code";
+const REQUEST_TIMEOUT_MS = 20000;
 
 export default function CodeChallengePage() {
   const { state } = useLocation();
@@ -9,6 +12,7 @@ export default function CodeChallengePage() {
   const interviewId = state?.interviewId;
   const codingQuestion = state?.codingQuestion;
 
+  // 🔒 Navigation guard
   if (!interviewId || !codingQuestion) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
@@ -16,9 +20,15 @@ export default function CodeChallengePage() {
           <h2 className="font-semibold text-slate-900 mb-1">
             Invalid interview session
           </h2>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-600 mb-4">
             Please restart the interview from the Study page.
           </p>
+          <button
+            onClick={() => navigate("/")}
+            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+          >
+            Go back
+          </button>
         </div>
       </div>
     );
@@ -35,28 +45,86 @@ export default function CodeChallengePage() {
   const [code, setCode] = useState(starterBody);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+
+  const abortRef = useRef(null);
 
   const submitCode = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        "http://localhost:8080/api/interview/submit-code",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ interviewId, code }),
-        }
-      );
+    if (loading) return;
 
-      const data = await res.json();
+    const trimmed = code.trim();
+
+    // 🚫 Prevent empty or unchanged submission
+    if (!trimmed || trimmed === starterBody.trim()) {
+      setError("Please implement a solution before submitting.");
+      return;
+    }
+
+    setError(null);
+    setLoading(true);
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, REQUEST_TIMEOUT_MS);
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({ interviewId, code }),
+      });
+
+      if (!res.ok) {
+        let message = "Code evaluation failed.";
+
+        try {
+          const text = await res.text();
+          if (text) {
+            message = text;
+          }
+        } catch {
+          // ignore
+        }
+
+        throw new Error(message);
+      }
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Invalid JSON response from server.");
+      }
+
+      if (
+        typeof data?.passed !== "boolean" ||
+        typeof data?.score !== "number" ||
+        typeof data?.feedback !== "string"
+      ) {
+        throw new Error("Malformed evaluation response.");
+      }
+
       setResult(data);
+    } catch (err) {
+      if (err.name === "AbortError") {
+        setError("Evaluation timed out. Please try again.");
+      } else {
+        setError(err.message || "Unexpected error during evaluation.");
+      }
     } finally {
+      clearTimeout(timeoutId);
+      abortRef.current = null;
       setLoading(false);
     }
   };
 
   const resetAttempt = () => {
     setResult(null);
+    setError(null);
     setCode(starterBody);
   };
 
@@ -105,7 +173,8 @@ export default function CodeChallengePage() {
               <div className="flex gap-2">
                 <button
                   onClick={() => setCode(starterBody)}
-                  className="px-3 py-1.5 text-sm rounded-md bg-slate-200 hover:bg-slate-300 text-slate-800"
+                  disabled={loading}
+                  className="px-3 py-1.5 text-sm rounded-md bg-slate-200 hover:bg-slate-300 text-slate-800 disabled:opacity-50"
                 >
                   Reset
                 </button>
@@ -120,6 +189,13 @@ export default function CodeChallengePage() {
               </div>
             </div>
           </div>
+
+          {/* Error banner */}
+          {error && (
+            <div className="border-t border-slate-200 bg-rose-50 px-6 py-3 text-sm text-rose-700">
+              {error}
+            </div>
+          )}
 
           {/* Monaco Editor */}
           <Editor
@@ -137,11 +213,12 @@ export default function CodeChallengePage() {
               padding: { top: 12 },
               wordWrap: "on",
               cursorBlinking: "smooth",
+              readOnly: loading,
             }}
           />
         </div>
 
-        {/* ===== Evaluation Section (CLEARLY SEPARATE CARD) ===== */}
+        {/* ===== Evaluation Section ===== */}
         {result && (
           <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
@@ -152,8 +229,8 @@ export default function CodeChallengePage() {
               <span
                 className={`px-3 py-1 rounded-full text-xs font-medium ${
                   result.passed
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
+                    ? "bg-emerald-100 text-emerald-700"
+                    : "bg-rose-100 text-rose-700"
                 }`}
               >
                 {result.passed ? "PASSED" : "NEEDS WORK"}
@@ -177,12 +254,11 @@ export default function CodeChallengePage() {
             {/* Actions */}
             <div className="mt-6 flex gap-3">
               <button
-  onClick={resetAttempt}
-  className="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
->
-  Start over
-</button>
-
+                onClick={resetAttempt}
+                className="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
+              >
+                Start over
+              </button>
 
               <button
                 onClick={() => navigate("/")}

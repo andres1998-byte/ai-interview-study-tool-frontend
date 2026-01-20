@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 export default function StudyResult({ data, studyParams }) {
   const navigate = useNavigate();
 
-  if (!data || !data.definition) {
+  // 🔒 Hard guard: no data or missing core field
+  if (!data || typeof data !== "object" || !data.definition) {
     return (
       <p className="mt-10 text-center text-sm text-slate-500 dark:text-slate-400">
         Enter a valid topic to generate interview material.
@@ -12,20 +13,56 @@ export default function StudyResult({ data, studyParams }) {
     );
   }
 
+  // 🛡️ Safe destructuring with fallbacks
+  const {
+    definition,
+    whenToUse = [],
+    example = {},
+    complexity = {},
+    commonMistakes = [],
+    quiz = null,
+  } = data;
+
+  const exampleCode = example?.code || "// Example unavailable.";
+  const exampleExplanation =
+    example?.explanation || "No explanation provided.";
+
+  const averageComplexity =
+    complexity?.average || "Not specified";
+  const worstComplexity =
+    complexity?.worst || "Not specified";
+
+  const safeWhenToUse = Array.isArray(whenToUse) ? whenToUse : [];
+  const safeMistakes = Array.isArray(commonMistakes)
+    ? commonMistakes
+    : [];
+
+  const canStartInterview =
+    studyParams &&
+    typeof studyParams === "object" &&
+    studyParams.topic &&
+    studyParams.level;
+
   return (
     <div className="mt-10 space-y-8">
       <Section title="Definition">
         <p className="leading-relaxed text-slate-700 dark:text-slate-300">
-          {data.definition}
+          {definition}
         </p>
       </Section>
 
       <Section title="When to use">
-        <ul className="list-disc space-y-1 pl-5 text-slate-700 dark:text-slate-300">
-          {data.whenToUse.map((item, i) => (
-            <li key={i}>{item}</li>
-          ))}
-        </ul>
+        {safeWhenToUse.length > 0 ? (
+          <ul className="list-disc space-y-1 pl-5 text-slate-700 dark:text-slate-300">
+            {safeWhenToUse.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            No usage guidance available.
+          </p>
+        )}
       </Section>
 
       <Section title="Example">
@@ -37,36 +74,49 @@ export default function StudyResult({ data, studyParams }) {
               dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100
             "
           >
-            {data.example.code}
+            {exampleCode}
           </pre>
 
           <p className="text-slate-700 dark:text-slate-300">
-            {data.example.explanation}
+            {exampleExplanation}
           </p>
         </div>
       </Section>
 
       <Section title="Complexity">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Stat label="Average" value={data.complexity.average} />
-          <Stat label="Worst" value={data.complexity.worst} />
+          <Stat label="Average" value={averageComplexity} />
+          <Stat label="Worst" value={worstComplexity} />
         </div>
       </Section>
 
       <Section title="Common mistakes">
-        <ul className="list-disc space-y-1 pl-5 text-slate-700 dark:text-slate-300">
-          {data.commonMistakes.map((m, i) => (
-            <li key={i}>{m}</li>
-          ))}
-        </ul>
+        {safeMistakes.length > 0 ? (
+          <ul className="list-disc space-y-1 pl-5 text-slate-700 dark:text-slate-300">
+            {safeMistakes.map((m, i) => (
+              <li key={i}>{m}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            No common mistakes listed.
+          </p>
+        )}
       </Section>
 
       <div className="rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/30 sm:p-6">
-        <Quiz quiz={data.quiz} />
+        {quiz ? (
+          <Quiz quiz={quiz} />
+        ) : (
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Quiz unavailable for this topic.
+          </p>
+        )}
       </div>
 
       <div className="pt-6">
         <button
+          disabled={!canStartInterview}
           onClick={() =>
             navigate("/interview", {
               state: studyParams,
@@ -77,10 +127,17 @@ export default function StudyResult({ data, studyParams }) {
             text-sm font-semibold text-white
             transition hover:bg-indigo-700
             focus:outline-none focus:ring-2 focus:ring-indigo-500
+            disabled:opacity-50 disabled:cursor-not-allowed
           "
         >
           Start Interview
         </button>
+
+        {!canStartInterview && (
+          <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-400">
+            Generate a valid study topic before starting the interview.
+          </p>
+        )}
       </div>
     </div>
   );

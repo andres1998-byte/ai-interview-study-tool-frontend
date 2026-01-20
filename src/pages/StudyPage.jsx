@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { generateStudy } from "../api/studyApi";
 import StudyForm from "../components/StudyForm";
 import StudyResult from "../components/StudyResult";
@@ -9,20 +9,73 @@ export default function StudyPage() {
   const [error, setError] = useState(null);
   const [studyParams, setStudyParams] = useState(null);
 
-  async function handleGenerate(payload) {
-    setLoading(true);
-    setError(null);
-    setStudyParams(payload); // keep storing for Start Interview
+  const generatingRef = useRef(false);
+  const isMountedRef = useRef(true);
 
-    try {
-      const response = await generateStudy(payload);
-      setData(response);
-    } catch {
-      setError("Please enter a real software engineering topic.");
-    } finally {
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  async function handleGenerate(payload) {
+  // 🔒 Extra guard: block while already loading
+  if (loading || generatingRef.current) {
+    setError("A study set is already being generated. Please wait.");
+    return;
+  }
+
+  generatingRef.current = true;
+
+  // 🔎 Basic frontend validation
+  if (
+    !payload ||
+    !payload.topic ||
+    !payload.topic.trim() ||
+    !payload.level ||
+    !payload.level.trim()
+  ) {
+    setError("Please enter a valid topic and level.");
+    generatingRef.current = false;
+    return;
+  }
+
+  setLoading(true);
+  setError(null);
+  setStudyParams(payload);
+
+  try {
+    const response = await generateStudy(payload);
+
+    // 🧪 Backend payload validation (always run)
+    if (
+      !response ||
+      typeof response.definition !== "string" ||
+      !Array.isArray(response.quiz) ||
+      response.quiz.length === 0
+    ) {
+      throw new Error("Invalid study payload from server.");
+    }
+
+    // ✅ Always accept valid responses (even if StudyPage remounted)
+    setData(response);
+  } catch (err) {
+    if (isMountedRef.current) {
+      setError(
+        err?.message ||
+          "Failed to generate study material. Please try again."
+      );
+    }
+  } finally {
+    // 🧯 Always release loading + ref
+    if (isMountedRef.current) {
       setLoading(false);
     }
+
+    generatingRef.current = false;
   }
+}
+
 
   return (
     <div className="w-full">
@@ -74,7 +127,9 @@ export default function StudyPage() {
 
             {/* Mini tips */}
             <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-300">
-              <p className="font-semibold text-slate-700 dark:text-slate-200">Pro tips</p>
+              <p className="font-semibold text-slate-700 dark:text-slate-200">
+                Pro tips
+              </p>
               <ul className="mt-2 space-y-1">
                 <li>• Try topics like “HashMap”, “Binary Search”, “SQL joins”, “REST pagination”.</li>
                 <li>• Use the interview flow after you generate material (it uses the same topic).</li>
@@ -110,12 +165,12 @@ export default function StudyPage() {
               </span>
             </div>
 
-            {/* Existing component (kept) */}
             <StudyResult data={data} studyParams={studyParams} />
 
             {!data && !loading && (
               <div className="mt-6 rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-                Enter a topic on the left and click <span className="font-semibold">Generate</span>.
+                Enter a topic on the left and click{" "}
+                <span className="font-semibold">Generate</span>.
               </div>
             )}
           </div>
