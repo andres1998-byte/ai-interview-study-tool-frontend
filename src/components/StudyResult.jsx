@@ -5,13 +5,11 @@ export default function StudyResult({ data, studyParams }) {
   const navigate = useNavigate();
 
   // 🔒 Hard guard: no data or missing core field
-  if (!data || typeof data !== "object" || !data.definition) {
-    return (
-      <p className="mt-10 text-center text-sm text-slate-500 dark:text-slate-400">
-        Enter a valid topic to generate interview material.
-      </p>
-    );
-  }
+  // 🔒 Hard guard: no data or missing core field
+if (!data || typeof data !== "object" || !data.definition) {
+  return null;
+}
+
 
   // 🛡️ Safe destructuring with fallbacks
   const {

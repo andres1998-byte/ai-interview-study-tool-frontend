@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function StudyForm({ onSubmit, loading }) {
+export default function StudyForm({ onSubmit, loading, hasData }) {
   const navigate = useNavigate();
 
   const extractPayload = (form) => {
@@ -89,17 +89,18 @@ export default function StudyForm({ onSubmit, loading }) {
       {/* Actions */}
       <div className="flex flex-col gap-3 pt-2 sm:flex-row">
         <button
-          type="submit"
-          disabled={loading}
-          className="
-            flex-1 rounded-lg border border-slate-300 px-4 py-2.5
-            text-sm font-medium text-slate-800
-            transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50
-            dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800
-          "
-        >
-          {loading ? "Generating…" : "Generate"}
-        </button>
+  type="submit"
+  disabled={loading && !hasData}
+  className="
+    flex-1 rounded-lg border border-slate-300 px-4 py-2.5
+    text-sm font-medium text-slate-800
+    transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50
+    dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800
+  "
+>
+  {loading && !hasData ? "Generating…" : "Generate"}
+</button>
+
 
         <button
           type="button"

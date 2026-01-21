@@ -18,14 +18,40 @@ export default function StudyPage() {
     };
   }, []);
 
+  useEffect(() => {
+  const saved = sessionStorage.getItem("lastStudy");
+
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+
+      if (parsed?.data && parsed?.params) {
+        setData(parsed.data);
+        setStudyParams(parsed.params);
+      }
+    } catch {
+      // Corrupted session data → discard
+      sessionStorage.removeItem("lastStudy");
+    }
+  }
+}, []);
+
+
   async function handleGenerate(payload) {
   // 🔒 Extra guard: block while already loading
-  if (loading || generatingRef.current) {
-    setError("A study set is already being generated. Please wait.");
-    return;
-  }
+if (loading && !data) {
+  setError("A study set is already being generated. Please wait.");
+  return;
+}
 
-  generatingRef.current = true;
+
+if (generatingRef.current) {
+  // stale ref safety: allow regeneration if loading is false
+  generatingRef.current = false;
+}
+
+generatingRef.current = true;
+
 
   // 🔎 Basic frontend validation
   if (
@@ -40,6 +66,7 @@ export default function StudyPage() {
     return;
   }
 
+  setData(null);
   setLoading(true);
   setError(null);
   setStudyParams(payload);
@@ -59,6 +86,14 @@ export default function StudyPage() {
 
     // ✅ Always accept valid responses (even if StudyPage remounted)
     setData(response);
+    sessionStorage.setItem(
+  "lastStudy",
+  JSON.stringify({
+    data: response,
+    params: payload,
+  })
+);
+
   } catch (err) {
     if (isMountedRef.current) {
       setError(
@@ -108,15 +143,23 @@ export default function StudyPage() {
               </span>
             </div>
 
-            <StudyForm onSubmit={handleGenerate} loading={loading} />
+            <StudyForm
+  onSubmit={handleGenerate}
+  loading={loading}
+  hasData={!!data}
+  initialValues={studyParams}
+/>
+
+
 
             {/* Status / error */}
             <div className="mt-4">
-              {loading && (
-                <p className="text-center text-sm text-slate-500 dark:text-slate-400">
-                  Generating interview material...
-                </p>
-              )}
+              {loading && !data && (
+  <p className="text-center text-sm text-slate-500 dark:text-slate-400">
+    Generating interview material...
+  </p>
+)}
+
 
               {error && (
                 <p className="text-center text-sm font-medium text-rose-600 dark:text-rose-400">
@@ -153,15 +196,16 @@ export default function StudyPage() {
               {/* Small “state” badge */}
               <span
                 className={[
-                  "rounded-full px-3 py-1 text-xs font-medium",
-                  loading
-                    ? "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-200"
-                    : data
-                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200"
-                    : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
-                ].join(" ")}
+  "rounded-full px-3 py-1 text-xs font-medium",
+  data
+    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200"
+    : loading
+    ? "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-200"
+    : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
+].join(" ")}
+
               >
-                {loading ? "Working…" : data ? "Ready" : "Waiting"}
+                {data ? "Ready" : loading ? "Working…" : "Waiting"}
               </span>
             </div>
 
