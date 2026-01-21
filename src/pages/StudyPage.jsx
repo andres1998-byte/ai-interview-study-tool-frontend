@@ -8,6 +8,7 @@ export default function StudyPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [studyParams, setStudyParams] = useState(null);
+  const [draftParams, setDraftParams] = useState(null);
 
   const generatingRef = useRef(false);
   const isMountedRef = useRef(true);
@@ -19,22 +20,45 @@ export default function StudyPage() {
   }, []);
 
   useEffect(() => {
-  const saved = sessionStorage.getItem("lastStudy");
+  const savedStudy = sessionStorage.getItem("lastStudy");
+  const savedDraft = sessionStorage.getItem("draftStudyParams");
 
-  if (saved) {
+  if (savedStudy) {
     try {
-      const parsed = JSON.parse(saved);
+      const parsed = JSON.parse(savedStudy);
 
       if (parsed?.data && parsed?.params) {
         setData(parsed.data);
         setStudyParams(parsed.params);
       }
     } catch {
-      // Corrupted session data → discard
       sessionStorage.removeItem("lastStudy");
     }
   }
+
+  if (savedDraft) {
+    try {
+      const parsedDraft = JSON.parse(savedDraft);
+
+      if (parsedDraft?.topic && parsedDraft?.level) {
+        setDraftParams(parsedDraft);
+      }
+    } catch {
+      sessionStorage.removeItem("draftStudyParams");
+    }
+  }
 }, []);
+
+
+useEffect(() => {
+  if (draftParams?.topic && draftParams?.level) {
+    sessionStorage.setItem(
+      "draftStudyParams",
+      JSON.stringify(draftParams)
+    );
+  }
+}, [draftParams]);
+
 
 
   async function handleGenerate(payload) {
@@ -70,6 +94,8 @@ generatingRef.current = true;
   setLoading(true);
   setError(null);
   setStudyParams(payload);
+  setDraftParams(payload);
+
 
   try {
     const response = await generateStudy(payload);
@@ -147,8 +173,13 @@ generatingRef.current = true;
   onSubmit={handleGenerate}
   loading={loading}
   hasData={!!data}
-  initialValues={studyParams}
+  initialValues={draftParams || studyParams}
+  lastGeneratedParams={studyParams}
+  onParamsChange={setDraftParams}
 />
+
+
+
 
 
 

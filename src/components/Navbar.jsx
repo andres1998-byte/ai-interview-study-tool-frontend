@@ -13,29 +13,43 @@ export default function Navbar() {
   const active = "bg-indigo-600 text-white shadow-sm";
 
   function goToInterview(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const saved = sessionStorage.getItem("lastStudy");
-
-    if (!saved) {
-      // No study generated yet → send back to Study
-      navigate("/");
-      return;
-    }
-
+  // 1) Prefer live draft intent
+  const draft = sessionStorage.getItem("draftStudyParams");
+  if (draft) {
     try {
-      const parsed = JSON.parse(saved);
-      const params = parsed?.params;
+      const parsedDraft = JSON.parse(draft);
 
-      if (params?.topic && params?.level) {
-        navigate("/interview", { state: params });
-      } else {
-        navigate("/");
+      if (parsedDraft?.topic && parsedDraft?.level) {
+        navigate("/interview", { state: parsedDraft });
+        return;
       }
     } catch {
-      navigate("/");
+      sessionStorage.removeItem("draftStudyParams");
     }
   }
+
+  // 2) Fallback to last generated study
+  const saved = sessionStorage.getItem("lastStudy");
+  if (!saved) {
+    navigate("/");
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(saved);
+    const params = parsed?.params;
+
+    if (params?.topic && params?.level) {
+      navigate("/interview", { state: params });
+    } else {
+      navigate("/");
+    }
+  } catch {
+    navigate("/");
+  }
+}
 
   return (
     <nav className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">

@@ -1,7 +1,50 @@
 import { useNavigate } from "react-router-dom";
+import { useRef, useState, useEffect } from "react";
 
-export default function StudyForm({ onSubmit, loading, hasData }) {
+export default function StudyForm({ onSubmit, loading, hasData, initialValues, lastGeneratedParams, onParamsChange}) {
   const navigate = useNavigate();
+  const formRef = useRef(null);
+  const lastTopic = lastGeneratedParams?.topic?.trim();
+ const lastLevel = lastGeneratedParams?.level;
+
+  const [currentTopic, setCurrentTopic] = useState(
+  initialValues?.topic || ""
+);
+const [currentLevel, setCurrentLevel] = useState(
+  initialValues?.level || "Junior"
+);
+
+useEffect(() => {
+  if (initialValues?.topic !== undefined) {
+    setCurrentTopic(initialValues.topic);
+  }
+
+  if (initialValues?.level !== undefined) {
+    setCurrentLevel(initialValues.level);
+  }
+}, [initialValues?.topic, initialValues?.level]);
+
+
+
+
+const isUnchanged =
+  lastTopic &&
+  lastLevel &&
+  currentTopic.trim() === lastTopic &&
+  currentLevel === lastLevel;
+
+
+
+function isSameAsLast() {
+  if (!lastTopic || !lastLevel) return false;
+
+  return (
+    currentTopic.trim() === lastTopic &&
+    currentLevel === lastLevel
+  );
+}
+
+
 
   const extractPayload = (form) => {
     const topic = form.topic.value.trim();
@@ -32,6 +75,12 @@ export default function StudyForm({ onSubmit, loading, hasData }) {
 
   const handleGenerate = (e) => {
     e.preventDefault();
+    const form = e.target;
+
+    if (isSameAsLast(form)) {
+     return; // no-op: nothing changed
+   }
+
     const payload = extractPayload(e.target);
     if (!payload) return;
     onSubmit(payload);
@@ -46,7 +95,7 @@ export default function StudyForm({ onSubmit, loading, hasData }) {
   };
 
   return (
-    <form onSubmit={handleGenerate} className="space-y-5">
+    <form ref={formRef} onSubmit={handleGenerate} className="space-y-5">
       {/* Topic input */}
       <div className="space-y-1">
         <label className="block text-xs font-medium text-slate-600 dark:text-slate-300">
@@ -54,6 +103,18 @@ export default function StudyForm({ onSubmit, loading, hasData }) {
         </label>
         <input
           name="topic"
+          value={currentTopic}
+          onChange={(e) => {
+  const value = e.target.value;
+  setCurrentTopic(value);
+
+  onParamsChange?.({
+    topic: value,
+    level: currentLevel,
+    language: "Java",
+  });
+}}
+
           placeholder="e.g. HashMap, Binary Search, REST pagination"
           className="
             w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5
@@ -73,6 +134,18 @@ export default function StudyForm({ onSubmit, loading, hasData }) {
         </label>
         <select
           name="level"
+          value={currentLevel}
+  onChange={(e) => {
+  const value = e.target.value;
+  setCurrentLevel(value);
+
+  onParamsChange?.({
+    topic: currentTopic,
+    level: value,
+    language: "Java",
+  });
+}}
+
           className="
             w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5
             text-sm text-slate-900
@@ -90,7 +163,7 @@ export default function StudyForm({ onSubmit, loading, hasData }) {
       <div className="flex flex-col gap-3 pt-2 sm:flex-row">
         <button
   type="submit"
-  disabled={loading && !hasData}
+  disabled={(loading && !hasData) || isUnchanged}
   className="
     flex-1 rounded-lg border border-slate-300 px-4 py-2.5
     text-sm font-medium text-slate-800
@@ -100,6 +173,7 @@ export default function StudyForm({ onSubmit, loading, hasData }) {
 >
   {loading && !hasData ? "Generating…" : "Generate"}
 </button>
+
 
 
         <button
