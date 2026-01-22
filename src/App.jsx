@@ -77,7 +77,6 @@ export default function App() {
             <span className="text-base">
               {theme === "dark" ? "🌙" : "☀️"}
             </span>
-            <span className="hidden sm:inline">{themeLabel} Mode - Click me!</span>
           </button>
         </div>
 
