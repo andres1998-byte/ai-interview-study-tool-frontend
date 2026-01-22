@@ -20,17 +20,24 @@ export default function InterviewPage() {
   // 🔒 Navigation guard
   if (!topic || !level) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center px-4">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
-          <p className="mb-4 text-sm font-medium text-rose-600 dark:text-rose-400">
-            Interview data missing. Please start from the Study page.
-          </p>
-          <button
-            onClick={() => navigate("/")}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-          >
-            Go back
-          </button>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 px-4 pt-32">
+        <div className="mx-auto max-w-md">
+          <div className="rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm dark:border-amber-800 dark:bg-slate-900">
+            <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+              <svg className="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <p className="mb-6 text-sm font-medium text-amber-700 dark:text-amber-400">
+              Interview data missing. Please start from the Study page.
+            </p>
+            <button
+              onClick={() => navigate("/")}
+              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg"
+            >
+              Go back
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -162,7 +169,7 @@ export default function InterviewPage() {
             <button
               disabled={loading}
               onClick={() => setPhase(PHASES.THEORY)}
-              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Starting..." : "Start Interview"}
             </button>
@@ -182,12 +189,17 @@ export default function InterviewPage() {
   if (phase === PHASES.THEORY) {
     if (loading) {
       return (
-        <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
-          <div className="text-center">
-            <div className="mb-4 inline-flex h-16 w-16 animate-spin items-center justify-center rounded-full border-4 border-slate-200 border-t-blue-600 dark:border-slate-700 dark:border-t-blue-500" />
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-              Starting interview…
-            </p>
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 px-4 pt-32">
+          <div className="mx-auto max-w-md">
+            <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
+              <div className="mb-6 inline-flex h-20 w-20 animate-spin items-center justify-center rounded-full border-[3px] border-slate-200 border-t-blue-600 shadow-sm dark:border-slate-700 dark:border-t-blue-500" />
+              <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                Starting interview…
+              </p>
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+                Preparing your questions
+              </p>
+            </div>
           </div>
         </div>
       );
@@ -195,22 +207,31 @@ export default function InterviewPage() {
 
     if (startError) {
       return (
-        <div className="mt-10 text-center">
-          <p className="mb-4 text-sm text-rose-600 dark:text-rose-400">
-            {startError}
-          </p>
-          <button
-            onClick={() => {
-              setPhase(PHASES.INTRO);
-              setInterview(null);
-              setAnswers({});
-              setResult(null);
-              setStartError(null);
-            }}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
-          >
-            Try again
-          </button>
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 px-4 pt-32">
+          <div className="mx-auto max-w-md">
+            <div className="rounded-2xl border border-rose-200 bg-white p-8 text-center shadow-sm dark:border-rose-800 dark:bg-slate-900">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900/30">
+                <svg className="h-6 w-6 text-rose-600 dark:text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <p className="mb-6 text-sm text-rose-600 dark:text-rose-400">
+                {startError}
+              </p>
+              <button
+                onClick={() => {
+                  setPhase(PHASES.INTRO);
+                  setInterview(null);
+                  setAnswers({});
+                  setResult(null);
+                  setStartError(null);
+                }}
+                className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg"
+              >
+                Try again
+              </button>
+            </div>
+          </div>
         </div>
       );
     }
@@ -290,7 +311,7 @@ export default function InterviewPage() {
                     return (
                       <label
                         key={opt}
-                        className="flex items-start gap-2 rounded-lg border border-slate-200 p-3 text-sm cursor-pointer transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+                        className="flex items-start gap-2 rounded-lg border border-slate-200 p-3 text-sm cursor-pointer transition-all hover:bg-slate-50 hover:border-slate-300 dark:border-slate-700 dark:hover:bg-slate-800 dark:hover:border-slate-600"
                       >
                         <input
                           type="radio"
@@ -331,8 +352,11 @@ export default function InterviewPage() {
             <button
               disabled={submitting}
               onClick={handleSubmit}
-              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
+              {submitting && (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              )}
               {submitting ? "Submitting..." : "Submit Answers"}
             </button>
 
@@ -439,7 +463,7 @@ export default function InterviewPage() {
 
           <button
             onClick={() => setPhase(PHASES.RESULT)}
-            className="mt-8 w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+            className="mt-8 w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg"
           >
             Continue to score
           </button>
@@ -570,7 +594,7 @@ export default function InterviewPage() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               onClick={() => navigate("/")}
-              className="flex-1 rounded-xl bg-slate-200 px-4 py-3 text-sm font-medium text-slate-900 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+              className="flex-1 rounded-xl bg-slate-200 px-4 py-3 text-sm font-medium text-slate-900 transition-all hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
             >
               Back to Study
             </button>
@@ -584,7 +608,7 @@ export default function InterviewPage() {
                   },
                 })
               }
-              className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+              className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg"
             >
               Continue to Coding Challenge
             </button>
