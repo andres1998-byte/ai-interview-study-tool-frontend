@@ -182,9 +182,14 @@ export default function InterviewPage() {
   if (phase === PHASES.THEORY) {
     if (loading) {
       return (
-        <p className="mt-10 text-center text-sm text-slate-500 dark:text-slate-400">
-          Starting interview…
-        </p>
+        <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+          <div className="text-center">
+            <div className="mb-4 inline-flex h-16 w-16 animate-spin items-center justify-center rounded-full border-4 border-slate-200 border-t-blue-600 dark:border-slate-700 dark:border-t-blue-500" />
+            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Starting interview…
+            </p>
+          </div>
+        </div>
       );
     }
 
