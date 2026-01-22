@@ -21,13 +21,13 @@ export default function InterviewPage() {
   if (!topic || !level) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center px-4">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white/80 p-6 text-center shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
+        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
           <p className="mb-4 text-sm font-medium text-rose-600 dark:text-rose-400">
             Interview data missing. Please start from the Study page.
           </p>
           <button
             onClick={() => navigate("/")}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             Go back
           </button>
@@ -109,17 +109,17 @@ export default function InterviewPage() {
             </p>
           </div>
 
-          <div className="mx-auto w-full max-w-2xl rounded-2xl border border-slate-200 bg-white/80 p-8 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
+          <div className="mx-auto w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <div className="mb-6 text-center">
-              <h2 className="text-2xl font-semibold tracking-tight">
-                You’re about to start a full {language} interview.
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+                You're about to start a full {language} interview.
               </h2>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                 This session includes theory questions followed by a coding challenge.
               </p>
             </div>
 
-            <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-800/40">
+            <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-700 dark:bg-slate-800">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
                 <div>
                   <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
@@ -162,7 +162,7 @@ export default function InterviewPage() {
             <button
               disabled={loading}
               onClick={() => setPhase(PHASES.THEORY)}
-              className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-50"
+              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
             >
               {loading ? "Starting..." : "Start Interview"}
             </button>
@@ -202,7 +202,7 @@ export default function InterviewPage() {
               setResult(null);
               setStartError(null);
             }}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             Try again
           </button>
@@ -268,7 +268,7 @@ export default function InterviewPage() {
             {interview.theoryQuestions.map((q, idx) => (
               <div
                 key={q.id}
-                className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60"
+                className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900"
               >
                 <p className="mb-1 text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
                   Question {idx + 1} of {interview.theoryQuestions.length}
@@ -285,7 +285,7 @@ export default function InterviewPage() {
                     return (
                       <label
                         key={opt}
-                        className="flex items-start gap-2 rounded-lg border border-slate-200 p-3 text-sm cursor-pointer transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800"
+                        className="flex items-start gap-2 rounded-lg border border-slate-200 p-3 text-sm cursor-pointer transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
                       >
                         <input
                           type="radio"
@@ -306,7 +306,7 @@ export default function InterviewPage() {
           </div>
 
           {/* Submission section */}
-          <div className="mt-12 rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
+          <div className="mt-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <div className="mb-4 flex items-center justify-between">
               <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
                 Ready to submit your interview?
@@ -326,7 +326,7 @@ export default function InterviewPage() {
             <button
               disabled={submitting}
               onClick={handleSubmit}
-              className="w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+              className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
             >
               {submitting ? "Submitting..." : "Submit Answers"}
             </button>
@@ -368,7 +368,7 @@ export default function InterviewPage() {
               return (
                 <div
                   key={q.id}
-                  className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60"
+                  className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900"
                 >
                   <div className="mb-3 flex items-center justify-between">
                     <p className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
@@ -434,7 +434,7 @@ export default function InterviewPage() {
 
           <button
             onClick={() => setPhase(PHASES.RESULT)}
-            className="mt-8 w-full rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="mt-8 w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
           >
             Continue to score
           </button>
@@ -482,12 +482,12 @@ export default function InterviewPage() {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-12">
         <div className="mx-auto w-full max-w-3xl px-4">
           {/* Summary card */}
-          <div className="mb-10 rounded-3xl border border-slate-200 bg-white/80 p-10 text-center shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
-            <p className="mb-2 text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          <div className="mb-10 rounded-3xl border border-slate-200 bg-white p-10 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            <p className="mb-2 text-sm font-medium uppercase tracking-wide text-slate-600 dark:text-slate-400">
               Interview complete
             </p>
 
-            <div className="mb-3 text-5xl font-bold tracking-tight text-indigo-600">
+            <div className="mb-3 text-5xl font-bold tracking-tight text-blue-600 dark:text-blue-500">
               {score}%
             </div>
 
@@ -500,8 +500,8 @@ export default function InterviewPage() {
             </p>
 
             <div className="mx-auto grid max-w-sm grid-cols-3 gap-4 text-sm">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-800/40">
-                <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800">
+                <p className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-400">
                   Total
                 </p>
                 <p className="mt-1 text-lg font-semibold text-slate-900 dark:text-slate-100">
@@ -509,20 +509,20 @@ export default function InterviewPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 dark:border-emerald-800 dark:bg-emerald-900/20">
-                <p className="text-xs uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 dark:border-emerald-700 dark:bg-emerald-900/30">
+                <p className="text-xs uppercase tracking-wide text-emerald-700 dark:text-emerald-400">
                   Correct
                 </p>
-                <p className="mt-1 text-lg font-semibold text-emerald-700 dark:text-emerald-300">
+                <p className="mt-1 text-lg font-semibold text-emerald-800 dark:text-emerald-300">
                   {correct}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 dark:border-rose-800 dark:bg-rose-900/20">
-                <p className="text-xs uppercase tracking-wide text-rose-600 dark:text-rose-400">
+              <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 dark:border-rose-700 dark:bg-rose-900/30">
+                <p className="text-xs uppercase tracking-wide text-rose-700 dark:text-rose-400">
                   Missed
                 </p>
-                <p className="mt-1 text-lg font-semibold text-rose-700 dark:text-rose-300">
+                <p className="mt-1 text-lg font-semibold text-rose-800 dark:text-rose-300">
                   {missed}
                 </p>
               </div>
@@ -539,7 +539,7 @@ export default function InterviewPage() {
               {missedQuestions.map((q, index) => (
                 <div
                   key={q.questionId ?? index}
-                  className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60"
+                  className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-900"
                 >
                   <p className="mb-4 text-sm font-medium text-slate-900 dark:text-slate-100">
                     {q.questionText}
@@ -565,7 +565,7 @@ export default function InterviewPage() {
           <div className="flex flex-col gap-3 sm:flex-row">
             <button
               onClick={() => navigate("/")}
-              className="flex-1 rounded-xl bg-slate-200 px-4 py-3 text-sm font-medium text-slate-800 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+              className="flex-1 rounded-xl bg-slate-200 px-4 py-3 text-sm font-medium text-slate-900 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
             >
               Back to Study
             </button>
@@ -579,7 +579,7 @@ export default function InterviewPage() {
                   },
                 })
               }
-              className="flex-1 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white hover:bg-indigo-700"
+              className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700"
             >
               Continue to Coding Challenge
             </button>

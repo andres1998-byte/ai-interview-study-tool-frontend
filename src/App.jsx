@@ -44,20 +44,20 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
       {/* Background glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-32 left-1/2 h-80 w-[60rem] -translate-x-1/2 rounded-full bg-indigo-200/40 blur-3xl dark:bg-indigo-500/15" />
-        <div className="absolute -bottom-40 right-[-10rem] h-96 w-96 rounded-full bg-sky-200/40 blur-3xl dark:bg-sky-500/10" />
+        <div className="absolute -top-32 left-1/2 h-80 w-[60rem] -translate-x-1/2 rounded-full bg-blue-200/30 blur-3xl dark:bg-blue-500/10" />
+        <div className="absolute -bottom-40 right-[-10rem] h-96 w-96 rounded-full bg-cyan-200/30 blur-3xl dark:bg-cyan-500/10" />
       </div>
 
       <div className="relative mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
         {/* Top bar */}
         <div className="mb-6 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-indigo-600/90 shadow-sm ring-1 ring-indigo-500/30 dark:bg-indigo-500/80" />
+            <div className="h-9 w-9 rounded-xl bg-blue-600 shadow-sm ring-1 ring-blue-500/30 dark:bg-blue-500" />
             <div>
-              <p className="text-sm font-semibold leading-none">
+              <p className="text-sm font-semibold leading-none text-slate-900 dark:text-slate-50">
                 AI Interview Study Tool
               </p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-600 dark:text-slate-400">
                 Study → Interview → Code challenge
               </p>
             </div>
@@ -66,7 +66,7 @@ export default function App() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-3 py-2 text-sm font-medium shadow-sm backdrop-blur transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900/70"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-50 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
           >
             <span className="text-base">
               {theme === "dark" ? "🌙" : "☀️"}
@@ -76,8 +76,8 @@ export default function App() {
         </div>
 
         {/* App shell */}
-        <div className="rounded-2xl border border-slate-200 bg-white/80 shadow-lg backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
-          <div className="border-b border-slate-200 px-4 py-3 dark:border-slate-800 sm:px-6">
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+          <div className="border-b border-slate-200 px-4 py-3 dark:border-slate-700 sm:px-6">
             <Navbar />
           </div>
 

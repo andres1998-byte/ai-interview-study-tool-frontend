@@ -119,8 +119,8 @@ function isSameAsLast() {
           className="
             w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5
             text-sm text-slate-900 placeholder:text-slate-400
-            focus:outline-none focus:ring-2 focus:ring-indigo-500
-            dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+            dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100
             dark:placeholder:text-slate-500
           "
           required
@@ -149,8 +149,8 @@ function isSameAsLast() {
           className="
             w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5
             text-sm text-slate-900
-            focus:outline-none focus:ring-2 focus:ring-indigo-500
-            dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+            dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100
           "
         >
           <option>Junior</option>
@@ -180,10 +180,10 @@ function isSameAsLast() {
           type="button"
           onClick={handleStartInterview}
           className="
-            flex-1 rounded-lg bg-indigo-600 px-4 py-2.5
+            flex-1 rounded-lg bg-blue-600 px-4 py-2.5
             text-sm font-semibold text-white
-            transition hover:bg-indigo-700
-            focus:outline-none focus:ring-2 focus:ring-indigo-500
+            transition hover:bg-blue-700
+            focus:outline-none focus:ring-2 focus:ring-blue-500
           "
         >
           Start Full Interview

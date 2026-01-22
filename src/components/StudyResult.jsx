@@ -68,8 +68,8 @@ if (!data || typeof data !== "object" || !data.definition) {
           <pre
             className="
               overflow-x-auto rounded-lg border border-slate-200
-              bg-slate-100 p-4 text-sm text-slate-800
-              dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100
+              bg-slate-100 p-4 text-sm text-slate-900
+              dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100
             "
           >
             {exampleCode}
@@ -102,7 +102,7 @@ if (!data || typeof data !== "object" || !data.definition) {
         )}
       </Section>
 
-      <div className="rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/30 sm:p-6">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:p-6">
         {quiz ? (
           <Quiz quiz={quiz} />
         ) : (
@@ -121,10 +121,10 @@ if (!data || typeof data !== "object" || !data.definition) {
             })
           }
           className="
-            w-full rounded-xl bg-indigo-600 px-4 py-3
+            w-full rounded-xl bg-blue-600 px-4 py-3
             text-sm font-semibold text-white
-            transition hover:bg-indigo-700
-            focus:outline-none focus:ring-2 focus:ring-indigo-500
+            transition hover:bg-blue-700
+            focus:outline-none focus:ring-2 focus:ring-blue-500
             disabled:opacity-50 disabled:cursor-not-allowed
           "
         >
@@ -143,8 +143,8 @@ if (!data || typeof data !== "object" || !data.definition) {
 
 function Section({ title, children }) {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white/70 p-5 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/30 sm:p-6">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900 sm:p-6">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
         {title}
       </h2>
       {children}
@@ -154,11 +154,11 @@ function Section({ title, children }) {
 
 function Stat({ label, value }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/40">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+    <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800">
+      <p className="text-xs font-medium uppercase tracking-wide text-slate-600 dark:text-slate-400">
         {label}
       </p>
-      <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">
+      <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">
         {value}
       </p>
     </div>

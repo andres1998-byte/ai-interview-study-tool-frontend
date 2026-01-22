@@ -15,17 +15,17 @@ export default function CodeChallengePage() {
   // 🔒 Navigation guard
   if (!interviewId || !codingQuestion) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm text-center max-w-md">
-          <h2 className="font-semibold text-slate-900 mb-1">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center px-4">
+        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm text-center max-w-md dark:bg-slate-900 dark:border-slate-700">
+          <h2 className="font-semibold text-slate-900 mb-1 dark:text-slate-50">
             Invalid interview session
           </h2>
-          <p className="text-sm text-slate-600 mb-4">
+          <p className="text-sm text-slate-600 mb-4 dark:text-slate-300">
             Please restart the interview from the Study page.
           </p>
           <button
             onClick={() => navigate("/")}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             Go back
           </button>
@@ -129,44 +129,44 @@ export default function CodeChallengePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-10">
       <div className="max-w-4xl mx-auto px-4 space-y-6">
         {/* ===== Header ===== */}
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-50">
             Coding Challenge
           </h1>
-          <p className="text-slate-600 mt-1">
+          <p className="text-slate-600 dark:text-slate-300 mt-1">
             Write the solution and submit it for AI evaluation.
           </p>
         </div>
 
         {/* ===== Problem ===== */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-          <p className="text-slate-800 leading-relaxed">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 dark:bg-slate-900 dark:border-slate-700">
+          <p className="text-slate-900 dark:text-slate-100 leading-relaxed">
             {codingQuestion.prompt}
           </p>
 
-          <div className="mt-4 rounded-lg bg-indigo-50 border border-indigo-100 px-4 py-3 text-sm text-indigo-700">
+          <div className="mt-4 rounded-lg bg-blue-50 border border-blue-100 px-4 py-3 text-sm text-blue-800 dark:bg-blue-900/30 dark:border-blue-700 dark:text-blue-300">
             💡 Focus on correctness, edge cases, and clean code.
           </div>
         </div>
 
         {/* ===== Editor Card ===== */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden dark:bg-slate-900 dark:border-slate-700">
           {/* Editor Header */}
-          <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 space-y-3">
+          <div className="px-6 py-4 border-b border-slate-200 bg-slate-50 space-y-3 dark:bg-slate-800 dark:border-slate-700">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
                 Method Signature
               </p>
-              <div className="mt-2 rounded-lg bg-white border border-slate-200 px-4 py-2 font-mono text-sm text-slate-900">
+              <div className="mt-2 rounded-lg bg-white border border-slate-200 px-4 py-2 font-mono text-sm text-slate-900 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100">
                 {codingQuestion.methodSignature}
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-2">
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
                 Implement only the method body below.
               </p>
 
@@ -174,7 +174,7 @@ export default function CodeChallengePage() {
                 <button
                   onClick={() => setCode(starterBody)}
                   disabled={loading}
-                  className="px-3 py-1.5 text-sm rounded-md bg-slate-200 hover:bg-slate-300 text-slate-800 disabled:opacity-50"
+                  className="px-3 py-1.5 text-sm rounded-md bg-slate-200 hover:bg-slate-300 text-slate-900 disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-100"
                 >
                   Reset
                 </button>
@@ -182,7 +182,7 @@ export default function CodeChallengePage() {
                 <button
                   onClick={submitCode}
                   disabled={loading}
-                  className="px-4 py-1.5 text-sm rounded-md bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50"
+                  className="px-4 py-1.5 text-sm rounded-md bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
                 >
                   {loading ? "Evaluating…" : "Submit"}
                 </button>
@@ -220,24 +220,24 @@ export default function CodeChallengePage() {
 
         {/* ===== Evaluation Section ===== */}
         {result && (
-          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 dark:bg-slate-900 dark:border-slate-700">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-slate-900">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
                 Evaluation Result
               </h3>
 
               <span
                 className={`px-3 py-1 rounded-full text-xs font-medium ${
                   result.passed
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-rose-100 text-rose-700"
+                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                    : "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300"
                 }`}
               >
                 {result.passed ? "PASSED" : "NEEDS WORK"}
               </span>
             </div>
 
-            <div className="space-y-1 text-sm text-slate-700">
+            <div className="space-y-1 text-sm text-slate-700 dark:text-slate-300">
               <p>
                 <strong>Score:</strong> {result.score}%
               </p>
@@ -247,7 +247,7 @@ export default function CodeChallengePage() {
               </p>
             </div>
 
-            <p className="mt-4 text-slate-700 leading-relaxed">
+            <p className="mt-4 text-slate-900 dark:text-slate-100 leading-relaxed">
               {result.feedback}
             </p>
 
@@ -255,14 +255,14 @@ export default function CodeChallengePage() {
             <div className="mt-6 flex gap-3">
               <button
                 onClick={resetAttempt}
-                className="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
+                className="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
               >
                 Start over
               </button>
 
               <button
                 onClick={() => navigate("/")}
-                className="flex-1 bg-gray-100 text-gray-800 py-2 rounded-md hover:bg-gray-200"
+                className="flex-1 bg-slate-200 text-slate-900 py-2 rounded-md hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
               >
                 Go back to homepage
               </button>
