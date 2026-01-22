@@ -72,12 +72,12 @@ export default function App() {
           <button
             type="button"
             onClick={toggleTheme}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-50 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-50 hover:shadow-md dark:border-yellow-500 dark:bg-yellow-500 dark:text-black dark:hover:bg-yellow-400"
           >
             <span className="text-base">
               {theme === "dark" ? "🌙" : "☀️"}
             </span>
-            <span className="hidden sm:inline">{themeLabel}</span>
+            <span className="hidden sm:inline">{themeLabel} Mode - Click me!</span>
           </button>
         </div>
 
