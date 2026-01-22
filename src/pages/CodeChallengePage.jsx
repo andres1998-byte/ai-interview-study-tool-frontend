@@ -239,7 +239,7 @@ export default function CodeChallengePage() {
 
             <div className="space-y-1 text-sm text-slate-700">
               <p>
-                <strong>Score:</strong> {result.score}
+                <strong>Score:</strong> {result.score}%
               </p>
               <p>
                 <strong>Status:</strong>{" "}
