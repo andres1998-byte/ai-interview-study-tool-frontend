@@ -1,8 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState, useRef } from "react";
 import Editor from "@monaco-editor/react";
+import { API_BASE_URL } from "../api/config";
 
-const API_URL = "http://localhost:8080/api/interview/submit-code";
+const API_URL = `${API_BASE_URL}/api/interview/submit-code`;
 const REQUEST_TIMEOUT_MS = 20000;
 
 export default function CodeChallengePage() {

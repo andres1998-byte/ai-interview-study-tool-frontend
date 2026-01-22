@@ -1,4 +1,6 @@
-const BASE_URL = "http://localhost:8080/api/interview";
+import { API_BASE_URL } from "./config";
+
+const BASE_URL = `${API_BASE_URL}/api/interview`;
 const DEFAULT_TIMEOUT_MS = 20000;
 
 // ⏱️ Timeout wrapper for fetch
