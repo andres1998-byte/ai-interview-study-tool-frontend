@@ -112,10 +112,10 @@ export default function InterviewPage() {
           <div className="mx-auto w-full max-w-2xl rounded-2xl border border-slate-200 bg-white/80 p-8 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/60">
             <div className="mb-6 text-center">
               <h2 className="text-2xl font-semibold tracking-tight">
-                You’re about to start a {language} interview
+                You’re about to start a full {language} interview.
               </h2>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-                This session simulates a real technical interview experience.
+                This session includes theory questions followed by a coding challenge.
               </p>
             </div>
 

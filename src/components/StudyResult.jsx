@@ -128,7 +128,7 @@ if (!data || typeof data !== "object" || !data.definition) {
             disabled:opacity-50 disabled:cursor-not-allowed
           "
         >
-          Start Interview
+          Start Full Interview
         </button>
 
         {!canStartInterview && (

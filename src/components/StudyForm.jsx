@@ -186,7 +186,7 @@ function isSameAsLast() {
             focus:outline-none focus:ring-2 focus:ring-indigo-500
           "
         >
-          Start Interview
+          Start Full Interview
         </button>
       </div>
     </form>
