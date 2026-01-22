@@ -98,43 +98,46 @@ generatingRef.current = true;
 
 
   try {
-    const response = await generateStudy(payload);
+  const response = await generateStudy(payload);
 
-    // 🧪 Backend payload validation (always run)
-    if (
-      !response ||
-      typeof response.definition !== "string" ||
-      !Array.isArray(response.quiz) ||
-      response.quiz.length === 0
-    ) {
-      throw new Error("Invalid study payload from server.");
-    }
-
-    // ✅ Always accept valid responses (even if StudyPage remounted)
-    setData(response);
-    sessionStorage.setItem(
-  "lastStudy",
-  JSON.stringify({
-    data: response,
-    params: payload,
-  })
-);
-
-  } catch (err) {
-    if (isMountedRef.current) {
-      setError(
-        err?.message ||
-          "Failed to generate study material. Please try again."
-      );
-    }
-  } finally {
-    // 🧯 Always release loading + ref
-    if (isMountedRef.current) {
-      setLoading(false);
-    }
-
-    generatingRef.current = false;
+  // 🧠 Backend semantic validation
+  if (
+    !response ||
+    typeof response.definition !== "string" ||
+    !Array.isArray(response.quiz) ||
+    response.quiz.length === 0 ||
+    response.definition.toLowerCase().includes("invalid")
+  ) {
+    throw new Error(
+      response?.definition && response.definition !== "Invalid topic"
+        ? response.definition
+        : "Invalid topic. Please enter a real technical concept."
+    );
   }
+
+  // ✅ Always accept valid responses
+  setData(response);
+
+  sessionStorage.setItem(
+    "lastStudy",
+    JSON.stringify({
+      data: response,
+      params: payload,
+    })
+  );
+
+} catch (err) {
+  setError(
+    err?.message ||
+      "Failed to generate study material. Please try again."
+  );
+
+} finally {
+  // 🧯 ALWAYS release loading + ref (never gate cleanup)
+  setLoading(false);
+  generatingRef.current = false;
+}
+
 }
 
 
