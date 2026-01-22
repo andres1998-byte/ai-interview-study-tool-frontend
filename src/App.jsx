@@ -24,8 +24,10 @@ export default function App() {
 
     if (theme === "dark") {
       root.classList.add("dark");
+      console.log("Dark mode applied - classList:", root.classList.toString());
     } else {
       root.classList.remove("dark");
+      console.log("Light mode applied - classList:", root.classList.toString());
     }
 
     localStorage.setItem("aiit_theme", theme);
@@ -37,7 +39,11 @@ export default function App() {
   );
 
   function toggleTheme() {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    setTheme((prev) => {
+      const newTheme = prev === "dark" ? "light" : "dark";
+      console.log("Theme toggled:", prev, "->", newTheme);
+      return newTheme;
+    });
   }
 
   return (
