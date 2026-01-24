@@ -190,7 +190,7 @@ generatingRef.current = true;
             <div className="mt-4">
               {loading && !data && (
   <p className="text-center text-sm text-slate-500 dark:text-slate-400">
-    Generating interview material...
+    Generating interview material (won't take more than a minute)...
   </p>
 )}
 
