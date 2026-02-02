@@ -2,7 +2,7 @@ import { API_BASE_URL } from "./config";
 
 const BASE_URL = `${API_BASE_URL}/api/study`;
 
-const DEFAULT_TIMEOUT_MS = 40000;
+const DEFAULT_TIMEOUT_MS = 90000;
 
 // ⏱️ Timeout wrapper for fetch
 async function fetchWithTimeout(url, options = {}, timeoutMs = DEFAULT_TIMEOUT_MS) {
